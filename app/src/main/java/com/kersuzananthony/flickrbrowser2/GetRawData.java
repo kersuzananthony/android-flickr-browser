@@ -27,6 +27,12 @@ class GetRawData extends AsyncTask<String, Void, String> {
         this.mDownloadStatus = DownloadStatus.IDLE;
     }
 
+    void runFromBackgroundThread(String s) {
+        Log.d(TAG, "runFromBackgroundThread: Run from background thread");
+
+        onPostExecute(doInBackground(s));
+    }
+
     @Override
     protected void onPostExecute(String s) {
         if (mListener != null) mListener.onDownloadCompleted(s, mDownloadStatus);

@@ -20,9 +20,14 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
 
-        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, API_BASE_URL, "en-en", true);
-        getFlickrJsonData.executeOnSameThread("android");
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, API_BASE_URL, "en-us", true);
+        getFlickrJsonData.execute("android");
     }
 
     @Override
