@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements GetRawData.OnDownloadCompleted {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
 
     private static final String TAG = MainActivity.class.getName();
+    private static final String API_BASE_URL = "https://api.flickr.com/services/feeds/photos_public.gne";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +21,8 @@ public class MainActivity extends AppCompatActivity implements GetRawData.OnDown
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Async task
-        GetRawData getRawData = new GetRawData(this);
-        getRawData.execute("https://api.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1");
+        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, API_BASE_URL, "en-en", true);
+        getFlickrJsonData.executeOnSameThread("android");
     }
 
     @Override
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements GetRawData.OnDown
     }
 
     @Override
-    public void onDownloadCompleted(String data, DownloadStatus downloadStatus) {
-        Log.d(TAG, "onDownloadCompleted: " + downloadStatus);
+    public void onDataAvailable(List<Photo> photos, DownloadStatus status) {
+        Log.d(TAG, "onDataAvailable: photos length " + photos.size());
     }
 }
