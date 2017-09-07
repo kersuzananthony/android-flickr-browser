@@ -8,11 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
+public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable,
+        RecyclerItemClickListener.OnRecyclerClickListener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final String API_BASE_URL = "https://api.flickr.com/services/feeds/photos_public.gne";
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
 
         recyclerView.setAdapter(this.mFlickrRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
     }
 
     @Override
@@ -71,5 +75,15 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         } else {
             this.mFlickrRecyclerViewAdapter.setPhotoList(new ArrayList<Photo>());
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d(TAG, "onItemClick: Item clicked at position " + position);
+    }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
+        Log.d(TAG, "onItemLongClick: Item long pressed at position " + position);
     }
 }
