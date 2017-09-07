@@ -1,29 +1,57 @@
 package com.kersuzananthony.flickrbrowser2;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class PhotoDetailActivity extends AppCompatActivity {
+import com.squareup.picasso.Picasso;
+
+public class PhotoDetailActivity extends BaseActivity {
+
+    private static final String TAG = "PhotoDetailActivity";
+    private static final String PHOTO_EXTRA = "PHOTO_EXTRA";
+    private Photo mPhoto;
+
+    public static Intent newIntent(Context context, Photo photo) {
+        Intent intent = new Intent(context, PhotoDetailActivity.class);
+        intent.putExtra(PHOTO_EXTRA, photo);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        activateToolbar(true);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(PHOTO_EXTRA)) {
+            mPhoto = intent.getParcelableExtra(PHOTO_EXTRA);
+            Log.d(TAG, "onCreate: Photo is " + mPhoto.toString());
+
+            updateUI();
+        }
     }
 
+    private void updateUI() {
+        if (mPhoto == null) return;
+        TextView photoTitleTextView = (TextView) findViewById(R.id.photo_title);
+        TextView photoAuthorTextView = (TextView) findViewById(R.id.photo_author);
+        TextView photoTagsTextView = (TextView) findViewById(R.id.photo_tags);
+        ImageView photoImageView = (ImageView) findViewById(R.id.photo_image);
+
+        photoTitleTextView.setText("Title: " + mPhoto.getTitle());
+        photoAuthorTextView.setText("Author: " + mPhoto.getAuthor());
+        photoTagsTextView.setText("Photo: " + mPhoto.getTags());
+
+        Picasso.with(this)
+                .load(mPhoto.getImage())
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(photoImageView);
+    }
 }

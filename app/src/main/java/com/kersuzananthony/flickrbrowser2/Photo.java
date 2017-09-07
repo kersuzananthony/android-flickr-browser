@@ -1,9 +1,12 @@
 package com.kersuzananthony.flickrbrowser2;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class Photo {
+class Photo implements Parcelable {
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_AUTHOR = "author";
@@ -31,6 +34,15 @@ class Photo {
         String image = mediaObject.getString(KEY_IMAGE).replaceFirst("_m.", "_b.");
 
         return new Photo(title, authorId, author, link, tags, image);
+    }
+
+    private Photo(Parcel in) {
+        mTitle = in.readString();
+        mAuthorId = in.readString();
+        mAuthor = in.readString();
+        mTags = in.readString();
+        mLink = in.readString();
+        mImage = in.readString();
     }
 
     Photo(String title, String authorId, String author, String link, String tags, String image) {
@@ -77,4 +89,31 @@ class Photo {
                 ", mImage='" + mImage + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeString(mAuthorId);
+        dest.writeString(mAuthor);
+        dest.writeString(mLink);
+        dest.writeString(mTags);
+        dest.writeString(mImage);
+    }
+
+    public static final Creator<Photo> CREATOR = new Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel source) {
+            return new Photo(source);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 }
