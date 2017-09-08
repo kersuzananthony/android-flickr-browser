@@ -44,9 +44,9 @@ public class PhotoDetailActivity extends BaseActivity {
         TextView photoTagsTextView = (TextView) findViewById(R.id.photo_tags);
         ImageView photoImageView = (ImageView) findViewById(R.id.photo_image);
 
-        photoTitleTextView.setText("Title: " + mPhoto.getTitle());
-        photoAuthorTextView.setText("Author: " + mPhoto.getAuthor());
-        photoTagsTextView.setText("Photo: " + mPhoto.getTags());
+        photoTitleTextView.setText(getResources().getString(R.string.photo_title_text, mPhoto.getTitle()));
+        photoAuthorTextView.setText(getResources().getString(R.string.photo_author_text, mPhoto.getAuthor()));
+        photoTagsTextView.setText(getResources().getString(R.string.photo_tags_text, mPhoto.getTags()));
 
         Picasso.with(this)
                 .load(mPhoto.getImage())
