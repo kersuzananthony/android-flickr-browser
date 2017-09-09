@@ -2,6 +2,7 @@ package com.kersuzananthony.flickrbrowser2;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,9 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
 
     @Override
     public int getItemCount() {
-        return this.mPhotoList != null ? this.mPhotoList.size() : 0;
+        int q = (this.mPhotoList == null || this.mPhotoList.size() == 0) ? 1 : this.mPhotoList.size();
+        Log.d(TAG, "getItemCount: " + q);
+        return q;
     }
 
     @Override
@@ -36,6 +39,11 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
 
     @Override
     public void onBindViewHolder(FlickrImageViewHolder holder, int position) {
+        if (mPhotoList == null || mPhotoList.size() == 0) {
+            holder.bindNoResult(mContext);
+            return;
+        }
+
         Photo currentPhoto = this.mPhotoList.get(position);
         holder.bind(this.mContext, currentPhoto);
     }
@@ -70,6 +78,11 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
                     .into(this.thumbnailImageView);
 
             this.titleTextView.setText(photo.getTitle());
+        }
+
+        void bindNoResult(Context context) {
+            this.thumbnailImageView.setImageResource(R.drawable.placeholder);
+            this.titleTextView.setText(context.getResources().getString(R.string.search_no_photo));
         }
     }
 }
