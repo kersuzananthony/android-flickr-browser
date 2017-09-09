@@ -1,6 +1,8 @@
 package com.kersuzananthony.flickrbrowser2;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,8 +39,12 @@ public class MainActivity extends BaseActivity implements GetFlickrJsonData.OnDa
     protected void onResume() {
         super.onResume();
 
-        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, API_BASE_URL, "en-us", true);
-        getFlickrJsonData.execute("android");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String queryResult = sharedPreferences.getString(FLICKR_QUERY, "");
+        if (queryResult.length() > 0) {
+            GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, API_BASE_URL, "en-us", true);
+            getFlickrJsonData.execute(queryResult);
+        }
     }
 
     @Override
